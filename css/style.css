@@ -1,0 +1,30 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    padding: 20px;
+}
+input{
+    margin-bottom: 10px;
+    padding: 5px;
+}
+button{
+    padding: 5px;
+}
+#logger{
+    color: grey;
+    overflow-y: scroll;
+    max-height: 400px;
+    width: 100%;
+    font-size: 0.9em;
+}
+.column{
+    width: 33%;
+    float: left;
+    font-size: 0.9em;
+}
+.column::after{
+    content: "";
+    clear: both;
+    display: table;
+}

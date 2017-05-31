@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="column">
+            <input id="awards" value="100,800,200,500,400,1000">
+            <input id="winners" value="Joshua,Mahesh,Lilian">
+            <button id="distribute">Award</button>
+            <strong>Log:</strong>
+            <div id="logger"></div>
+            <h3>Results:</h3>
+            <div id="results"></div>
+        </div>
+        <div class="column doc" style="width: 66%; padding: 10px">
+            <h2 style="text-align: center">Random-Reconcile-Check</h2>
+            <hr>
+            <p><b>Fair</b> can be defined simply as the minimum unjust advantage.</p>
+            <p>
+                A fair distribution is where, given a list of <code>winners</code> who already picked <code>awards</code>,
+                the difference between the <code>winner</code> with the highest total award value and the <code>winner</code> with the lowest
+                total award value should not be more than any award value picked by the <code>winner</code> with the highest total award value.
+            </p>
+            <p>
+                Given a number of  finite <code><code>winners</code></code> and finite <code>awards</code>, a <code>winner</code> should
+                not get more than the other <code><code>winners</code></code> unnecessarily (<i>Every <code>winners</code> is entitled to as much as the other <code>winners</code>,
+                    the choices should be random and also try to minimise the difference between the highest and the lowest values issued 
+                    to each <code>winners</code>.</i>). 
+            </p>
+
+            I developed an algorithm <strong>Random-Reconcile-Check</strong>
+
+            <h2>1. Random</h2>
+            <p>Every <code>winner</code> is given a chance to pick atleast one award randomly.</p>
+            <p><strong>Assumptions:</strong> awards are equal to or more than <code>winners</code>.</p>
+
+            <h2>2. Reconcile</h2>
+            <p>
+                <code>winners</code> are first shuffled.
+
+                Each <code>winner</code> <i>A</i> is then allowed to go checking awards that every other <code>winners</code> <i>B</i> picked.
+                If the sum of awards <b>(award value)</b> by <code>winner</code> <i>B</i> is more than the award value of <i>A</i>, then 
+                <i>A</i> checks if <i>B</i> has any award that is less than or equal to the value difference, If any, <i>A</i> picks the awards 
+                and moves on to the next <code>winner</code>.
+
+            </p>
+
+            <h2>3. Check</h2>
+            <p>
+                The <code>winners</code> are sorted in an ascending order. If the last <code>winner</code> award value is more than the first 
+                <code>winner's</code> award value with a value equal to or more than any award the last <code>winner</code> has, then all the <code>winners</code> are forced to reconcile and another check is done.
+            </p>
+        </div>
+    <script src="fair-distributor.js"></script>
+    <script>
+        function split(){
+            var logger = document.getElementById("logger");
+            var awards = document.getElementById("awards").value;
+            var winners = document.getElementById("winners").value;
+
+            try{
+                var computer = null;
+                
+                try{
+                   computer = new Distributor(winners.split(","), awards.split(","), true);
+                }catch(e){
+                    logger.innerHTML = e;
+                    return;
+                }
+                computer.compute();
+                logger.innerHTML = computer.dump;
+            }catch(e){
+                logger.innerHTML = "<i style='color:red'>" + e + "</i>";
+            }
+
+            var results = "";
+            computer.winners.forEach(function(winner){
+                results += "<strong>" + winner.name + "</strong>:";
+                winner.awards.forEach(function(award){
+                    results += "<i>" + award + ",";
+                }, this);
+                results += "</i></br>"
+            }, this);
+
+            document.getElementById("results").innerHTML = results;
+        }
+
+        document.getElementById("distribute").addEventListener("click", split);
+    </script>
+    </body>
+</html>
